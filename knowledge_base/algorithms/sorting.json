@@ -1,0 +1,37 @@
+{
+  "algorithms": [
+    {
+      "name": "bubble_sort",
+      "time_complexity": {
+        "best": "O(n)",
+        "average": "O(n²)",
+        "worst": "O(n²)"
+      },
+      "space_complexity": "O(1)",
+      "stable": true,
+      "in_place": true
+    },
+    {
+      "name": "quick_sort",
+      "time_complexity": {
+        "best": "O(n log n)",
+        "average": "O(n log n)",
+        "worst": "O(n²)"
+      },
+      "space_complexity": "O(log n)",
+      "stable": false,
+      "in_place": true
+    },
+    {
+      "name": "merge_sort",
+      "time_complexity": {
+        "best": "O(n log n)",
+        "average": "O(n log n)",
+        "worst": "O(n log n)"
+      },
+      "space_complexity": "O(n)",
+      "stable": true,
+      "in_place": false
+    }
+  ]
+}

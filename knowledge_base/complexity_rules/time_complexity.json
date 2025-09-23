@@ -1,0 +1,24 @@
+{
+  "rules": [
+    {
+      "pattern": "single_loop",
+      "complexity": "O(n)"
+    },
+    {
+      "pattern": "nested_loops_2",
+      "complexity": "O(n²)"
+    },
+    {
+      "pattern": "nested_loops_3",
+      "complexity": "O(n³)"
+    },
+    {
+      "pattern": "divide_conquer",
+      "complexity": "O(n log n)"
+    },
+    {
+      "pattern": "binary_recursion",
+      "complexity": "O(2^n)"
+    }
+  ]
+}

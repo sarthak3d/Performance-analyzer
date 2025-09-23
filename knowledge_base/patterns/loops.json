@@ -1,0 +1,29 @@
+{
+  "patterns": [
+    {
+      "id": "single_loop",
+      "name": "Single Loop",
+      "description": "Single iteration over a collection",
+      "time_complexity": "O(n)",
+      "space_complexity": "O(1)",
+      "languages": ["python", "java", "cpp", "javascript"]
+    },
+    {
+      "id": "nested_loops",
+      "name": "Nested Loops",
+      "description": "Two or more nested iterations",
+      "time_complexity": "O(n^k) where k is nesting level",
+      "space_complexity": "O(1)",
+      "languages": ["python", "java", "cpp", "javascript"]
+    },
+    {
+      "id": "logarithmic_loop",
+      "name": "Logarithmic Loop",
+      "description": "Loop with multiplicative increment/decrement",
+      "time_complexity": "O(log n)",
+      "space_complexity": "O(1)",
+      "examples": ["i *= 2", "i /= 2"],
+      "languages": ["python", "java", "cpp", "javascript"]
+    }
+  ]
+}

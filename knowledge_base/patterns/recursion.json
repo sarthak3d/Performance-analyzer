@@ -1,0 +1,28 @@
+{
+  "patterns": [
+    {
+      "id": "linear_recursion",
+      "name": "Linear Recursion",
+      "description": "Single recursive call per function",
+      "time_complexity": "O(n)",
+      "space_complexity": "O(n)",
+      "examples": ["factorial", "linear_search"]
+    },
+    {
+      "id": "binary_recursion",
+      "name": "Binary Recursion",
+      "description": "Two recursive calls per function",
+      "time_complexity": "O(2^n)",
+      "space_complexity": "O(n)",
+      "examples": ["fibonacci", "tree_traversal"]
+    },
+    {
+      "id": "tail_recursion",
+      "name": "Tail Recursion",
+      "description": "Recursive call is the last operation",
+      "time_complexity": "O(n)",
+      "space_complexity": "O(1) with optimization",
+      "optimization": "Can be converted to iteration"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "rules": [
+    {
+      "pattern": "no_extra_space",
+      "complexity": "O(1)"
+    },
+    {
+      "pattern": "single_array",
+      "complexity": "O(n)"
+    },
+    {
+      "pattern": "matrix",
+      "complexity": "O(n²)"
+    },
+    {
+      "pattern": "recursion_stack",
+      "complexity": "O(n)"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "data_structures": [
+    {
+      "name": "Array",
+      "operations": {
+        "access": "O(1)",
+        "search": "O(n)",
+        "insertion": "O(n)",
+        "deletion": "O(n)"
+      }
+    },
+    {
+      "name": "LinkedList",
+      "operations": {
+        "access": "O(n)",
+        "search": "O(n)",
+        "insertion": "O(1)",
+        "deletion": "O(1)"
+      }
+    },
+    {
+      "name": "HashMap",
+      "operations": {
+        "access": "O(1) average",
+        "search": "O(1) average",
+        "insertion": "O(1) average",
+        "deletion": "O(1) average"
+      }
+    },
+    {
+      "name": "TreeMap",
+      "operations": {
+        "access": "O(log n)",
+        "search": "O(log n)",
+        "insertion": "O(log n)",
+        "deletion": "O(log n)"
+      }
+    }
+  ]
+}

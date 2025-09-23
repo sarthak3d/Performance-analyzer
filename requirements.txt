@@ -1,0 +1,21 @@
+# Core dependencies
+click==8.1.7
+typer==0.9.0
+rich==13.7.0
+pydantic==2.5.3
+loguru==0.7.2
+python-dotenv==1.0.0
+pyyaml==6.0.1
+tabulate==0.9.0
+jsonschema==4.20.0
+
+# Testing
+pytest==7.4.4
+pytest-cov==4.1.0
+pytest-mock==3.12.0
+
+# Development
+black==23.12.1
+flake8==7.0.0
+mypy==1.7.1
+isort==5.13.2
