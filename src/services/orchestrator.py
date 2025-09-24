@@ -34,6 +34,14 @@ class Orchestrator:
             start_time = time.time()
             language = request.language.lower()
             
+            # Validate language against configuration
+            if language not in self.bridge.config["analyzers"]:
+                raise ValueError(f"Unsupported language: {language}")
+                
+            lang_config = self.bridge.config["analyzers"][language]
+            if not lang_config.get("enabled", False):
+                raise ValueError(f"Analyzer for {language} is currently disabled")
+            
             logger.info(f"Analyzing {language} code from {request.file_name}")
             
             # Call native analyzer through bridge

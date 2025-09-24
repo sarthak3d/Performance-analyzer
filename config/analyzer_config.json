@@ -4,22 +4,34 @@
     "python": {
       "enabled": true,
       "timeout": 30,
-      "max_file_size": 10485760
+      "max_file_size": 10485760,
+      "file_extension": "py",
+      "in_process": true,
+      "analyzer_module": "analyzers.python.analyzer.PythonComplexityAnalyzer"
     },
     "java": {
       "enabled": true,
       "timeout": 30,
-      "max_file_size": 10485760
+      "max_file_size": 10485760,
+      "file_extension": "java",
+      "command": ["java", "-jar", "analyzers/java/target/java-analyzer-1.0.0-jar-with-dependencies.jar"],
+      "in_process": false
     },
     "cpp": {
       "enabled": true,
       "timeout": 30,
-      "max_file_size": 10485760
+      "max_file_size": 10485760,
+      "file_extension": "cpp",
+      "command": ["./analyzers/cpp/build/cpp_analyzer"],
+      "in_process": false
     },
     "javascript": {
       "enabled": true,
       "timeout": 30,
-      "max_file_size": 10485760
+      "max_file_size": 10485760,
+      "file_extension": "js",
+      "command": ["node", "analyzers/javascript/src/index.js"],
+      "in_process": false
     }
   },
   "output": {
