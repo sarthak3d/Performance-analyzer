@@ -23,8 +23,15 @@ RUN apt-get update && apt-get install -y \
     clang-14 \
     libclang-14-dev \
     llvm-14 \
-    # JSON library for C++
+    llvm-14-dev \
+    libllvm14 \
+    llvm-14-tools \
+    clang-tools-14 \
+    libclang-cpp14-dev \
+    pkg-config \
+    # JSON libraries
     nlohmann-json3-dev \
+    libcjson-dev \
     # Node.js for JavaScript
     curl \
     # General utilities
@@ -48,6 +55,19 @@ RUN mvn clean package
 # Build C++ analyzer
 COPY analyzers/cpp /app/analyzers/cpp
 WORKDIR /app/analyzers/cpp
+RUN mkdir build && \
+    cd build && \
+    cmake .. && \
+    make
+
+# Build C analyzer
+COPY analyzers/c /app/analyzers/c
+WORKDIR /app/analyzers/c
+
+# Set LLVM/Clang paths (optional but safer)
+ENV LLVM_DIR=/usr/lib/llvm-14/lib/cmake/llvm
+ENV Clang_DIR=/usr/lib/llvm-14/lib/cmake/clang
+
 RUN mkdir build && \
     cd build && \
     cmake .. && \

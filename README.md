@@ -14,3 +14,21 @@ Analyzer Configration File Format
   }
 }
 '''
+'''
+analyzers/c/
+├── include/
+│   ├── analyzer.h
+│   ├── ast_visitor.h
+│   ├── complexity_calculator.h
+│   ├── pattern_detector.h
+│   ├── json_handler.h
+│   └── types.h
+├── src/
+│   ├── main.c
+│   ├── analyzer.c
+│   ├── ast_visitor.c
+│   ├── complexity_calculator.c
+│   ├── pattern_detector.c
+│   └── json_handler.c
+└── CMakeLists.txt
+'''

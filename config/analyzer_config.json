@@ -32,6 +32,14 @@
       "file_extension": "js",
       "command": ["node", "analyzers/javascript/src/index.js"],
       "in_process": false
+    },
+    "c": {
+      "enabled": true,
+      "timeout": 30,
+      "max_file_size": 10485760,
+      "file_extension": "c",
+      "command": ["analyzers/c/build/c_analyzer"],
+      "in_process": false
     }
   },
   "output": {
