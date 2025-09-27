@@ -6,7 +6,7 @@
       "description": "Single iteration over a collection",
       "time_complexity": "O(n)",
       "space_complexity": "O(1)",
-      "languages": ["python", "java", "cpp", "javascript"]
+      "languages": ["python", "java", "javascript"]
     },
     {
       "id": "nested_loops",
@@ -14,7 +14,7 @@
       "description": "Two or more nested iterations",
       "time_complexity": "O(n^k) where k is nesting level",
       "space_complexity": "O(1)",
-      "languages": ["python", "java", "cpp", "javascript"]
+      "languages": ["python", "java", "javascript"]
     },
     {
       "id": "logarithmic_loop",
@@ -23,7 +23,7 @@
       "time_complexity": "O(log n)",
       "space_complexity": "O(1)",
       "examples": ["i *= 2", "i /= 2"],
-      "languages": ["python", "java", "cpp", "javascript"]
+      "languages": ["python", "java", "javascript"]
     }
   ]
 }

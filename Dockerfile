@@ -17,7 +17,6 @@ RUN apt-get update && apt-get install -y \
     maven \
     # C/C++ and Clang
     gcc \
-    g++ \
     cmake \
     make \
     clang-14 \
@@ -30,7 +29,6 @@ RUN apt-get update && apt-get install -y \
     libclang-cpp14-dev \
     pkg-config \
     # JSON libraries
-    nlohmann-json3-dev \
     libcjson-dev \
     # Node.js for JavaScript
     curl \
@@ -51,14 +49,6 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 COPY analyzers/java /app/analyzers/java
 WORKDIR /app/analyzers/java
 RUN mvn clean package
-
-# Build C++ analyzer
-COPY analyzers/cpp /app/analyzers/cpp
-WORKDIR /app/analyzers/cpp
-RUN mkdir build && \
-    cd build && \
-    cmake .. && \
-    make
 
 # Build C analyzer
 COPY analyzers/c /app/analyzers/c
