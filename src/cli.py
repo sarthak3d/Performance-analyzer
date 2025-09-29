@@ -24,7 +24,7 @@ from .utils.file_detector import detect_language
 
 console = Console()
 app = typer.Typer(
-    name="bigo",
+    name="performance-analyzer",
     help="Professional Big O Complexity Analyzer",
     add_completion=True,
 )
@@ -41,7 +41,6 @@ class Language(str, Enum):
     """Supported programming languages."""
     PYTHON = "python"
     JAVA = "java"
-    CPP = "cpp"
     C = "c"
     JAVASCRIPT = "javascript"
     AUTO = "auto"
@@ -77,9 +76,9 @@ def analyze(
     Analyze the complexity of a code file.
     
     Examples:
-        bigo analyze script.py
-        bigo analyze Algorithm.java --format json
-        bigo analyze sort.cpp --language cpp --verbose
+        performance-analyzer analyze script.py
+        performance-analyzer analyze Algorithm.java --format json
+        performance-analyzer analyze sort.cpp --language cpp --verbose
     """
     try:
         with console.status("[bold green]Analyzing code...", spinner="dots"):
