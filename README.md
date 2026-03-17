@@ -104,7 +104,7 @@ GET /info
 ## Configuration
 
 Analyzer Configuration File Format
-'''
+```json
 {
   "#language_name": {
     "enabled": true,
@@ -118,4 +118,4 @@ Analyzer Configuration File Format
     "analyzer_module": "pathto analyzer AnalyzerClass"
   }
 }
-'''
+```
