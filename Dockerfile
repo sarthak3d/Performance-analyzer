@@ -111,8 +111,20 @@ ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 ENV PATH=$JAVA_HOME/bin:$PATH
 
 # Create volume mount points
-VOLUME ["/app/input", "/app/output"]
+VOLUME ["/input", "/output"]
 
-# Default command
+# Default to CLI mode
+ENV API_MODE=false
+ENV API_PORT=5000
+ENV API_HOST=0.0.0.0
+ENV API_WORKERS=1
+ENV API_TIMEOUT=120
+ENV API_MAX_REQUESTS=1000
+ENV API_MAX_REQUESTS_JITTER=50
+
+EXPOSE 5000
+
+# Use Python as entrypoint for both CLI and API modes
 ENTRYPOINT ["python3", "-m", "src.main"]
-CMD ["--help"]
+CMD []
+

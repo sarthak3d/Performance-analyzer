@@ -4,6 +4,7 @@ Provides command-line interface with rich formatting and interactive features.
 """
 
 import json
+import os
 from pathlib import Path
 from typing import List, Optional
 from enum import Enum
@@ -46,15 +47,35 @@ class Language(str, Enum):
     AUTO = "auto"
 
 
+def resolve_file_path(file_path: Path) -> Path:
+    """
+    Resolve file path, prepending /input if running in Docker and file doesn't exist.
+    This allows for both absolute paths (/input/file.py) and relative paths (file.py).
+    """
+    # If file exists as-is, use it
+    if file_path.exists():
+        return file_path
+    
+    # If path is already absolute and starts with /input, use as-is
+    if file_path.is_absolute() and str(file_path).startswith('/input'):
+        return file_path
+    
+    # Check if we're likely in a Docker container
+    if os.path.exists('/.dockerenv') or os.environ.get('DOCKER_CONTAINER'):
+        # Prepending /input
+        docker_path = Path('/input') / file_path
+        if docker_path.exists():
+            return docker_path
+    
+    # Return original path (will fail validation if doesn't exist)
+    return file_path
+
+
 @app.command()
 def analyze(
-    file_path: Path = typer.Argument(
+    file_path: str = typer.Argument(
         ...,
         help="Path to the code file to analyze",
-        exists=True,
-        file_okay=True,
-        dir_okay=False,
-        readable=True,
     ),
     language: Language = typer.Option(
         Language.AUTO,
@@ -65,6 +86,11 @@ def analyze(
         OutputFormat.TABLE,
         "--format", "-f",
         help="Output format for analysis results",
+    ),
+    output_file: Optional[Path] = typer.Option(
+        None,
+        "--output", "-o",
+        help="Save results to file (supports /output/ prefix in Docker)",
     ),
     verbose: bool = typer.Option(
         False,
@@ -77,48 +103,67 @@ def analyze(
     
     Examples:
         performance-analyzer analyze script.py
-        performance-analyzer analyze Algorithm.java --format json
-        performance-analyzer analyze sort.cpp --language cpp --verbose
+        performance-analyzer analyze /input/Algorithm.java --format json
+        performance-analyzer analyze sort.cpp --language c --verbose
+        
+    Docker Examples:
+        docker run -v $(pwd):/input analyzer analyze script.py
+        docker run -v $(pwd):/input analyzer analyze /input/script.py
     """
     try:
         with console.status("[bold green]Analyzing code...", spinner="dots"):
             orchestrator = Orchestrator()
             
-            # Validate inputs
-            if not validate_file_path(file_path):
-                console.print(f"[red]Error: Invalid file path: {file_path}[/red]")
+            # Resolve file path (handles Docker volume mounting)
+            resolved_path = resolve_file_path(Path(file_path))
+            
+            # Validate the resolved path
+            if not resolved_path.exists():
+                console.print(f"[red]Error: File not found: {file_path}[/red]")
+                console.print(f"[yellow]Resolved path: {resolved_path}[/yellow]")
+                console.print(f"[yellow]Tip: When using Docker, mount your directory to /input[/yellow]")
+                raise typer.Exit(1)
+            
+            if not resolved_path.is_file():
+                console.print(f"[red]Error: Path is not a file: {resolved_path}[/red]")
                 raise typer.Exit(1)
             
             # Auto-detect language if needed
             if language == Language.AUTO:
-                detected_language = detect_language(file_path)
+                detected_language = detect_language(resolved_path)
                 if not detected_language:
                     console.print("[red]Error: Could not detect language[/red]")
                     raise typer.Exit(1)
                 language_str = detected_language
             else:
-                language_str = language.value  # Get string value from enum
+                language_str = language.value
             
             # Read file
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(resolved_path, 'r', encoding='utf-8') as f:
                 code_content = f.read()
             
             # Create request
             request = AnalysisRequest(
                 code=code_content,
-                language=language_str,  # Use the string value
-                file_name=file_path.name,
+                language=language_str,
+                file_name=resolved_path.name,
                 options={"verbose": verbose}
             )
             
             # Perform analysis
             result = orchestrator.analyze(request)
             
-            # Display results
-            display_results(result, output_format, verbose)
+            # Display or save results
+            if output_file:
+                # Resolve output file path (support /output prefix)
+                if not output_file.is_absolute() and os.path.exists('/.dockerenv'):
+                    output_file = Path('/output') / output_file
+                save_single_result(result, output_file, output_format)
+            else:
+                display_results(result, output_format, verbose)
             
-    except FileNotFoundError:
-        console.print(f"[red]Error: File not found: {file_path}[/red]")
+    except FileNotFoundError as e:
+        console.print(f"[red]Error: File not found: {e}[/red]")
         raise typer.Exit(1)
     except Exception as e:
         logger.exception("Analysis failed")
@@ -154,8 +199,11 @@ def batch(
     Batch analyze multiple files in a directory.
     
     Examples:
-        bigo batch ./src --pattern "*.py" --recursive
-        bigo batch ./algorithms --output results.json
+        performance-analyzer batch ./src --pattern "*.py" --recursive
+        performance-analyzer batch ./algorithms --output results.json
+        
+    Docker Example:
+        docker run -v $(pwd):/input analyzer batch /input --pattern "*.py"
     """
     orchestrator = Orchestrator()
     
@@ -221,6 +269,10 @@ def info():
   • Pattern recognition
   • Best/Average/Worst case analysis
   • Confidence scoring
+
+[bold]Docker Usage:[/bold]
+  docker run -v $(pwd):/input analyzer analyze file.py
+  docker run -v $(pwd):/input -v $(pwd):/output analyzer analyze file.py -o results.json
     """
     console.print(Panel(info_text, border_style="cyan"))
 
@@ -285,8 +337,34 @@ def display_batch_results(results: List[AnalysisResult]):
     console.print(table)
 
 
+def save_single_result(result: AnalysisResult, output_file: Path, format: OutputFormat):
+    """Save a single result to file."""
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+    
+    if format == OutputFormat.JSON:
+        data = format_json_output(result)
+        with open(output_file, 'w') as f:
+            json.dump(data, f, indent=2)
+    else:
+        # Save as formatted text
+        with open(output_file, 'w') as f:
+            f.write(f"File: {result.file_name}\n")
+            f.write(f"Language: {result.language}\n\n")
+            f.write(f"Time Complexity:\n")
+            f.write(f"  Best: {result.time_complexity.best_case}\n")
+            f.write(f"  Average: {result.time_complexity.average_case}\n")
+            f.write(f"  Worst: {result.time_complexity.worst_case}\n\n")
+            f.write(f"Space Complexity:\n")
+            f.write(f"  Best: {result.space_complexity.best_case}\n")
+            f.write(f"  Average: {result.space_complexity.average_case}\n")
+            f.write(f"  Worst: {result.space_complexity.worst_case}\n")
+    
+    console.print(f"[green]Results saved to {output_file}[/green]")
+
+
 def save_results(results: List[AnalysisResult], output_file: Path):
     """Save results to file."""
+    output_file.parent.mkdir(parents=True, exist_ok=True)
     data = [format_json_output(r) for r in results]
     with open(output_file, 'w') as f:
         json.dump(data, f, indent=2)

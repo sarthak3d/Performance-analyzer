@@ -2,14 +2,12 @@ from setuptools import setup, find_packages
 
 # Simple setup without README dependency
 setup(
-    name="bigo-analyzer",
+    name="performance-analyzer",
     version="1.0.0",
-    author="Your Name",
-    author_email="your.email@example.com",
+    author="Sarthak Darshan",
     description="Professional Big O Complexity Analyzer",
     long_description="A professional-grade tool for analyzing time and space complexity of code across multiple programming languages using native language analyzers.",
     long_description_content_type="text/plain",
-    # url="https://github.com/yourusername/bigo-analyzer",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",

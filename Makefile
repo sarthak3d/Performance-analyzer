@@ -11,11 +11,11 @@ help:
 	@echo "  make format   - Format code"
 
 build:
-	docker build -t bigo-analyzer:latest .
+	docker build -t performance-analyzer:latest .
 
 run:
 	@echo "Usage: make run FILE=<path_to_file>"
-	docker run --rm -v $(PWD):/app/input bigo-analyzer:latest analyze /app/input/$(FILE)
+	docker run --rm -v $(PWD):/app/input performance-analyzer:latest analyze /app/input/$(FILE)
 
 test:
 	pytest tests/ -v --cov=src
